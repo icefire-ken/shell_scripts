@@ -44,7 +44,7 @@ show_system_info() {
 # ===========================
 show_menu() {
     echo -e "${YELLOW}========== Linux 系统初始化菜单 ==========${NC}"
-    echo "1) 执行初始化任务1（预留）"
+    echo "1) 关闭防火墙与SELinux"
     echo "2) 执行初始化任务2（预留）"
     echo "3) 执行初始化任务3（预留）"
     echo "4) 执行初始化任务4（预留）"
@@ -58,10 +58,40 @@ show_menu() {
 # ===========================
 
 task1() {
-    echo -e "${GREEN}执行任务1：例如更新系统软件包${NC}"
-    # 示例操作：
-    # dnf -y update
+    echo -e "${GREEN}执行任务1：关闭防火墙和SELinux${NC}"
+
+    echo -e "\n${YELLOW}>>> 正在关闭firewalld...${NC}"
+    # 关闭防火墙立即生效
+    systemctl stop firewalld 2>/dev/null
+    # 禁止开机自动启动
+    systemctl disable firewalld 2>/dev/null
+
+    # 检查是否成功
+    if systemctl is-active firewalld >/dev/null 2>&1; then
+        echo -e "${RED}防火墙关闭失败！${NC}"
+    else
+        echo -e "${GREEN}防火墙已关闭，并设置为开机不启动。${NC}"
+    fi
+
+    echo -e "\n${YELLOW}>>> 正在关闭SELinux...${NC}"
+
+    # 立即关闭 SELinux（临时）
+    setenforce 0 2>/dev/null
+
+    # 永久修改 /etc/selinux/config
+    if [ -f /etc/selinux/config ]; then
+        sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
+        echo -e "${GREEN}SELinux已修改为永久关闭（需要重启生效）。${NC}"
+    else
+        echo -e "${RED}/etc/selinux/config 文件不存在，无法永久关闭SELinux！${NC}"
+    fi
+
+    # 显示当前 SELinux 状态
+    echo -e "当前SELinux模式：${GREEN}$(getenforce)${NC}"
+
+    echo -e "\n${GREEN}任务1执行完成：防火墙与SELinux已关闭。${NC}"
 }
+
 
 task2() {
     echo -e "${GREEN}执行任务2：例如配置主机名、时区等${NC}"
