@@ -152,9 +152,35 @@ task2() {
 
 
 task3() {
-    echo -e "${GREEN}执行任务3：例如创建常用用户和目录${NC}"
-    # 示例操作：
-    # useradd deploy && mkdir -p /data
+    echo -e "${YELLOW}开始安装常用工具...${NC}"
+
+    # 建议工具列表（可修改）
+    TOOLS="tree vim bash-completion wget bind-utils"
+
+    echo -e "${BLUE}将要安装以下工具：${NC}"
+    echo "$TOOLS"
+    echo
+
+    # 确认系统是否支持 dnf
+    if ! command -v dnf >/dev/null 2>&1; then
+        echo -e "${RED}本系统不支持dnf，无法继续安装！${NC}"
+        return
+    fi
+
+    # 更新元数据缓存（只更新一次）
+    echo -e "${BLUE}更新dnf元数据缓存...${NC}"
+    dnf makecache -y
+
+    # 安装工具
+    echo -e "${BLUE}开始安装软件包...${NC}"
+    dnf install -y $TOOLS
+
+    # 检查是否安装成功
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}常用工具安装完成！${NC}"
+    else
+        echo -e "${RED}安装过程中出现错误，请检查网络或软件源配置！${NC}"
+    fi
 }
 
 task4() {
