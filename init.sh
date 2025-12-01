@@ -41,9 +41,9 @@ show_system_info() {
     main_ip=$(ip -o -4 addr show scope global | awk '{print $4}' | head -n 1)
 
     if [[ -n "$main_ip" ]]; then
-        echo -e "IP 地址     : ${GREEN}${main_ip}${NC}"
+        echo -e "IP 地址    : ${GREEN}${main_ip}${NC}"
     else
-        echo -e "IP 地址     : ${RED}未检测到有效 IPv4 地址${NC}"
+        echo -e "IP 地址    : ${RED}未检测到有效 IPv4 地址${NC}"
     fi
 
     echo
