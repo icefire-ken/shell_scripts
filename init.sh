@@ -76,7 +76,11 @@ show_menu() {
     echo "2) 添加EPEL仓库源并更新dnf元数据缓存"
     echo "3) 安装常用软件包"
     echo "4) 优化系统与软件包配置"
-    echo "5) 执行初始化任务5（预留）"
+    echo "5) 安装 Docker Engine"
+    echo "6) 执行初始化任务6（预留）"
+    echo "7) 执行初始化任务7（预留）"
+    echo "8) 执行初始化任务8（预留）"
+    echo "9) 执行初始化任务9（预留）"
     echo "q) 退出脚本"
     echo -e "${YELLOW}==========================================${NC}"
 }
@@ -270,14 +274,64 @@ EOF
 export PS1="\\[\\e[37m\\][\\[\\e[32m\\]\\t \\[\\e[33m\\]\\u\\[\\e[37m\\]@\\h \\[\\e[35m\\]\\W\\[\\e[37m\\]]\\[\\e[0m\\]# "
 EOF
 
-    echo -e "${YELLOW}PS1 提示符增强已配置${NC}"
+    echo -e "${GREEN}PS1 提示符增强已配置${NC}"
 
     echo -e "\n${GREEN}任务4执行完成：系统与软件包配置已优化。${NC}"
     echo -e "${YELLOW}提示：所有优化在重新登录终端后生效。${NC}"
 }
 
 task5() {
-    echo -e "${GREEN}执行任务5：例如设置防火墙规则${NC}"
+    echo -e "\n${GREEN}执行任务4：开始安装 Docker Engine${NC}"
+
+    echo -e "\n${YELLOW}1. 卸载任何可能冲突的软件包...${NC}"
+    dnf remove -y docker \
+        docker-client \
+        docker-client-latest \
+        docker-common \
+        docker-latest \
+        docker-latest-logrotate \
+        docker-logrotate \
+        docker-engine  2>/dev/null
+
+    echo -e "\n${YELLOW}2. 安装依赖工具...${NC}"
+    dnf -y install dnf-plugins-core
+
+    echo -e "\n${YELLOW}3. 添加 Docker 官方仓库...${NC}"
+
+    dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+    echo -e "\n${YELLOW}4. 安装 Docker Engine 及相关工具${NC}"
+    dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+    echo -e "\n${YELLOW}5. 设置 Docker Engine 开机自启动并立即启动服务...${NC}"
+    systemctl enable --now docker
+
+    echo -e "\n${GREEN}任务4执行完成：Docker Engine 已成功安装并启动！${NC}\n"
+
+    DOCKER_VER=$(docker --version 2>/dev/null)
+    echo -e "当前 Docker Engine 安装版本：${YELLOW}${DOCKER_VER}${NC}"
+}
+
+task6() {
+    echo -e "${GREEN}执行任务6：安装Podman${NC}"
+    # 示例操作：
+    # firewall-cmd --add-service=ssh --permanent && firewall-cmd --reload
+}
+
+task7() {
+    echo -e "${GREEN}执行任务7：例如设置防火墙规则${NC}"
+    # 示例操作：
+    # firewall-cmd --add-service=ssh --permanent && firewall-cmd --reload
+}
+
+task8() {
+    echo -e "${GREEN}执行任务8：例如设置防火墙规则${NC}"
+    # 示例操作：
+    # firewall-cmd --add-service=ssh --permanent && firewall-cmd --reload
+}
+
+task9() {
+    echo -e "${GREEN}执行任务9：例如设置防火墙规则${NC}"
     # 示例操作：
     # firewall-cmd --add-service=ssh --permanent && firewall-cmd --reload
 }
@@ -292,13 +346,17 @@ show_system_info
 # 进入主循环，展示菜单并等待用户输入
 while true; do
     show_menu
-    read -p "请输入选项编号（1-5 或 q 退出）: " choice
+    read -p "请输入选项编号（1-9 或 q 退出）: " choice
     case $choice in
         1) task1 ;;
         2) task2 ;;
         3) task3 ;;
         4) task4 ;;
         5) task5 ;;
+        6) task6 ;;
+        7) task7 ;;
+        8) task8 ;;
+        9) task9 ;;
         q|Q)
             echo -e "${YELLOW}已退出脚本。${NC}"
             break
