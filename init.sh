@@ -57,7 +57,7 @@ RHEL_PACKAGES=(
 
 # Debian 系（Ubuntu/Debian）
 DEBIAN_PACKAGES=(
-    tree vim bash-completion wget curl lrzsz tcpdump git lsof htop
+    tree vim bash-completion wget curl lrzsz tcpdump git lsof htop psmisc
     dnsutils iputils-ping iputils-tracepath iputils-arping iputils-clockdiff
 )
 
