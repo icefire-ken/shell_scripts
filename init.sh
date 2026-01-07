@@ -256,7 +256,7 @@ action_install_packages() {
             read -rp "$(echo -e "${YELLOW}→ 是否更新所有可升级的软件包？[y/N]: ${NC}")" upgrade_choice
             case "${upgrade_choice,,}" in
                 y|yes)
-                    if dnf upgrade --exclude=kernel* -y; then
+                    if dnf upgrade -y; then
                         echo -e "${GREEN}✓ 所有软件包已更新完成。${NC}"
                     else
                         echo -e "${RED}✗ 软件包更新过程中出现错误。${NC}"
@@ -292,7 +292,7 @@ action_install_packages() {
             read -rp "$(echo -e "${YELLOW}→ 是否更新所有可升级的软件包？[y/N]: ${NC}")" upgrade_choice
             case "${upgrade_choice,,}" in
                 y|yes)
-                    if apt upgrade -y $(apt list --upgradable --quiet=2 | grep -Ev '^linux-' | cut -d/ -f1); then
+                    if apt upgrade -y; then
                         echo -e "${GREEN}✓ 所有软件包已更新完成。${NC}"
                     else
                         echo -e "${RED}✗ 软件包更新过程中出现错误。${NC}"
@@ -384,6 +384,11 @@ filetype plugin indent on " 按文件类型启用智能缩进
 EOF
 
     echo -e "${GREEN}✓ Vim 配置已更新。${NC}"
+
+    # --- 设置时区 ---
+    timedatectl set-timezone Asia/Shanghai
+
+    echo -e "${GREEN}✓ Asia/Shanghai 时区已更新。${NC}"
 
     echo -e "${GREEN}>>> 系统及软件配置优化完成（重新进入终端生效）。${NC}"
 }
