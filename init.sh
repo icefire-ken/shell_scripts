@@ -362,7 +362,7 @@ alias cdnet='cd $CDNET_PATH'
 
 
 # =========== 命令行提示符 ===========
-export PS1="╭─ 💁 ${GREEN}\u${NC} 💻 ${YELLOW}\h${NC} 📁 ${MAGENTA}\w${NC}\n╰➜ "
+export PS1=" 💁 ${GREEN}\u${NC} 💻 ${YELLOW}\h${NC} 📁 ${MAGENTA}\w${NC}\n "
 
 
 # =========== 24小时制 ===========
