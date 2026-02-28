@@ -577,6 +577,14 @@ Components: stable
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
+    # ！！！最重要的一步：添加源后立即更新索引！！！
+    echo -e "${YELLOW}→ 更新 APT 索引（加载新添加的 Docker 源）...${NC}"
+    if ! apt update; then
+        echo -e "${RED}✗ apt update 失败，请检查网络或源是否可用${NC}"
+        cat /etc/apt/sources.list.d/docker.list
+        return 1
+    fi
+
     echo -e "${YELLOW}→ 安装 Docker Engine 及相关组件...${NC}"
     if ! apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin; then
         echo -e "${RED}✗ Docker 安装失败。${NC}"
